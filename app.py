@@ -103,6 +103,10 @@ class Routes():
         """Delete a user"""
 
         user = User.query.get_or_404(user_id)
+
+        db.session.delete(user)
+        db.session.commit()
+
         return redirect('/users')
 
     @app.errorhandler(404)

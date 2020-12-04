@@ -5,14 +5,16 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
+app.config['SECRET_KEY'] = 'secrettttzzz'
 
 db = SQLAlchemy(app)
 
 DEFAULT_PFP = 'https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png'
 
-# Database Model
 
-
+#----------------------------#
+#-------| DATABASES |--------#
+#----------------------------#
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -24,9 +26,18 @@ class User(db.Model):
 
     image_url = db.Column(db.String, nullable=False, default=DEFAULT_PFP)
 
+    def __repr__(self):
+        u = self
+        return f"<User {u.id} {u.first_name} {u.last_name} {u.image_url}>"
 
+    def full_name(self):
+        return self.first_name + ' ' + self.last_name
+
+
+#----------------------------#
+#---------| ROUTES |---------#
+#----------------------------#
 class Routes():
-    # Routes
     @app.route('/')
     def index():
         """Redirect to users list"""
@@ -40,11 +51,23 @@ class Routes():
         users = User.query.all()
         return render_template('users.html', users=users)
 
+    @app.route('/users/new')
+    def user_new_form():
+        return render_template('user_new.html')
+
     @app.route('/users/new', methods=["POST"])
     def user_new():
         """Create a new user with a POST request"""
+        first = request.form['first']
+        last = request.form['last']
+        img = request.form['img'] if request.form['img'] else None
 
-        return render_template('user_new.html')
+        user = User(first_name=first, last_name=last, image_url=img)
+
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect('/users')
 
     @app.route('/users/<int:user_id>')
     def user_details(user_id):
@@ -65,7 +88,15 @@ class Routes():
         """Send POST request on submit of user edit"""
 
         user = User.query.get_or_404(user_id)
-        redirect('/users')
+        user.first_name = request.form['first_name']
+        user.last_name = request.form['last_name']
+        user.image_url = request.form['image_url'] if request.form['image_url'] else None
+
+        db.session.add(user)
+        db.session.commit()
+
+        flash('User details updated successfully!')
+        return redirect(f'/users/{user.id}/edit')
 
     @app.route('/users/<int:user_id>/delete', methods=["POST"])
     def user_delete(user_id):

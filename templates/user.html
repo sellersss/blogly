@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %} {{ user.full_name() }} {% endblock %}
+
+{% block content %}
+<style>
+    .avatar {
+        border: 0.3rem solid rgba(#fff, 0.3);
+        margin-top: -6rem;
+        margin-bottom: 1rem;
+        max-width: 9rem;
+    }
+</style>
+<div class="row justify-content-center">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-6">
+        <div class="card">
+            <img class="card-img-top" src="https://cdn.wallpapersafari.com/3/46/NuEPV1.png" alt="foo" ">
+            <div class=" card-body text-center">
+            <img class="avatar rounded-pill img-fluid img-thumbnail shadow" src="{{ user.image_url }}" alt="bar"
+                style="min-width: 200px;">
+            <h4 class="card-title">{{ user.full_name() }}</h4>
+            <h6 class="card-subtitle mb-3 text-muted">Author</h6>
+            <form>
+                <button formaction="/users/{{ user.id }}/edit" formmethod="GET"
+                    class="btn btn-primary px-4">Edit</button>
+                <button formaction="/users/{{ user.id }}/delete" formmethod="POST"
+                    class="btn btn-outline-danger px-3">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

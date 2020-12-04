@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %} New User {% endblock %}
+
+{% block content %}
+<div class="row ml-3">
+    <h1 class="display-1 text-dark">New User</h1>
+</div>
+<div class="row ml-3">
+    <form action="/users/new" method="POST">
+        <div class="form-group">
+            <label for="first">First name</label>
+            <input type="input" name="first" placeholder="Jane" class="form-control mt-n2" required>
+        </div>
+        <div class="form-group">
+            <label for="last">Last name</label>
+            <input type="input" name="last" placeholder="Doe" class="form-control mt-n2" required>
+        </div>
+        <div class="form-group">
+            <label for="img">Image URL</label>
+            <input type="input" name="img" placeholder="https://www.image.com/avatar.png" class="form-control mt-n2">
+        </div>
+        <input type="submit" class="btn btn-outline-dark mt-1 px-5">
+    </form>
+</div>
+{% endblock %}

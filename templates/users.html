@@ -1,4 +1,15 @@
 {% extends 'base.html' %}
-<div class="row mt-5">
-    <h1>Hello {{name}}</h1>
+{% block title %} All Users {% endblock %}
+
+{% block content %}
+<div class="row ml-3">
+    <h1 class="display-1 text-dark">All Users</h1>
 </div>
+<div class="row ml-3">
+    <ul>
+        {% for user in users %}
+        <li class="lead"><a href="/users/{{user.id}}">{{ user.full_name() }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

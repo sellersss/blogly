@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %} Editing {{ user.first_name }} {% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="row ml-3">
+    <div class="col-lg-3 col-md-4 text-center">
+        <img src="{{ user.image_url }}" alt="" class="img-fluid rounded-pill img-thumbnail shadow">
+    </div>
+    <div class="col-lg-9 col-md-8">
+        <form action="/users/{{user.id}}/edit" method="POST" class="form-control">
+            <div class="form-group">
+                <label for="first_name">First name</label>
+                <input type="input" name="first_name" placeholder="{{ user.first_name }}" class="form-control mt-n2"
+                    style="user-select: all;" value="{{ user.first_name }}">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last name</label>
+                <input type="input" name="last_name" placeholder="{{ user.last_name }}" class="form-control mt-n2"
+                    style="user-select: all;" value='{{ user.last_name }}'>
+            </div>
+            <div class="form-group">
+                <label for="image_url">Image URL</label>
+                <input type="input" name="image_url" placeholder="{{ user.image_url }}" class="form-control mt-n2"
+                    style="user-select: all;" value="{{ user.image_url }}">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mr-2">Save</button>
+                <a href="/users/{{ user.id }}" class="btn btn-outline-danger">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

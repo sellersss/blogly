@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %} 404 Error {% endblock %}
+
+{% block content %}
+<div class="row mt-5 justify-content-center">
+
+    <img src="{{ url_for('static', filename='img/broken link.png') }}" alt="">
+</div>
+<div class="row text-center justify-content-center">
+    <div class="error mt-1">
+        <h1 class="mt-5">Error 404</h1>
+        <p class="lead">The page you requested could not be found :(</p>
+    </div>
+</div>
+{% endblock %}

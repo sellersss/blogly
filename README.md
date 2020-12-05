@@ -6,5 +6,5 @@ A fairly simple blog site which currently only possesses CRUD functionality for 
     - Flask
     - SQLAlchemy
     - PostgreSQL
-    - Bootstrap (with [Materia theme](https://bootswatch.com/materia/) )
+    - Bootstrap with [Materia theme](https://bootswatch.com/materia/)
     - jQuery

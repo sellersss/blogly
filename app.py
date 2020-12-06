@@ -1,5 +1,7 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -32,6 +34,24 @@ class User(db.Model):
 
     def full_name(self):
         return self.first_name + ' ' + self.last_name
+
+
+class Post(db.Model):
+    __tablename__ = 'posts'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String(50), nullable=False)
+    body = db.Column(db.String(), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    def __repr__(self):
+        p = self
+        return f"<Post {p.id} {p.title} {p.body} {p.created_at}>"
+
+    def format_date(self):
+        return self.created_at.strftime('%B %-d, %Y' + ' at ' + '%I:%M %p')
 
 
 #----------------------------#
@@ -108,6 +128,60 @@ class Routes():
         db.session.commit()
 
         return redirect('/users')
+
+    @app.route('/users/<int:user_id>/posts/new')
+    def post_new_form(user_id):
+        """Display form to handle new posts on a per user basis"""
+
+        user = User.query.get_or_404(user_id)
+
+        return render_template('post_new.html', user=user)
+
+    @app.route('/users/<int:user_id>/posts/new', methods=["POST"])
+    def post_new(user_id):
+        """Submit post request on form submit to add blog to db"""
+
+        # user = User.query.get_or_404(user_id)
+
+        title = request.form['title']
+        body = request.form['body']
+        post = Post(title=title, body=body, user_id=user_id)
+
+        db.session.add(post)
+        db.session.commit()
+
+        return redirect(f"/users/{user_id}")
+
+    @app.route('/posts/<int:post_id>')
+    def posts_all(post_id):
+        """Display post by a single user from user_id"""
+
+        post = Post.query.get_or_404(post_id)
+        user = User.query.get_or_404(post.user_id)
+
+        return render_template('post.html', post=post, user=user)
+
+    @app.route('/posts/<int:post_id>/edit')
+    def post_edit_form(post_id):
+        """Form to edit posts"""
+
+        post = Post.query.get_or_404(post_id)
+
+        return render_template('post_edit.html', post=post)
+
+    @app.route('/posts/<int:post_id>/edit', methods=["POST"])
+    def post_edit(post_id):
+        """Handle editing per post ID"""
+
+        post = Post.query.get_or_404(post_id)
+        post.title = request.form['title']
+        post.body = request.form['body']
+
+        db.session.add(post)
+        db.session.commit()
+
+        flash('Post updated successfully!')
+        return render_template('post_edit.html', post=post)
 
     @app.errorhandler(404)
     def page_not_found(e):

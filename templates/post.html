@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %} {{ post.title }} Details {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5 mb-3">
+    <div class="col-10 mx-auto text-center">
+        <h1 class="display-4">{{ post.title }}</h1>
+        <p class="lead">by <a href="/users/{{ user.id }}"><strong>{{ user.full_name() }}</strong></a> on
+            {{ post.format_date() }}</p>
+    </div>
+</div>
+<div class="row justify align-content-start">
+    <div class="col-lg-10 col-sm-12 col-md-12 mx-auto d-block">
+        <div class="card p-5 bg-dark shadow">
+            <div class="card-body">
+                <p class="text-light" style="line-height: 1.5rem !important; font-size: 16px !important;">
+                    {{ post.body }}
+                </p>
+            </div>
+            <div class="card-footer mt-4">
+                <form>
+                    <button formaction="/posts/{{ post.id }}/edit" formmethod="GET"
+                        class="btn btn-primary px-4 mr-1">Edit</button>
+                    <button formaction="/posts/{{ post.id }}/delete" formmethod="POST"
+                        class="btn btn-danger px-3 ml-1">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

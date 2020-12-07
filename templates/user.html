@@ -20,11 +20,10 @@
                 <h4 class="card-title">{{ user.full_name() }}</h4>
                 <h6 class="card-subtitle mb-3 text-muted">Author</h6>
 
-                <h4 class="">Posts</h4>
-                {% if posts %}
+                {% if user.posts %}
                 <ul class="list-group" style="width: 300px !important; margin: 0 auto;">
-
-                    {% for post in posts %}
+                    <h4 class="">Posts</h4>
+                    {% for post in user.posts %}
                     <li class="list-group-item mb-n3"><a href="/posts/{{ post.id }}">{{ post.title }}</a></li>
                     {% endfor %}
                     {% else %}
@@ -32,12 +31,14 @@
                     </li>
                 </ul>
                 {% endif %}
-                <div class="card-footer mt-4">
+                <div class="card shadow-none mt-4">
+                    <p class="text-muted"><a href="/users/{{ user.id }}/posts/new" class="text-muted">Create a new
+                            post</a></p>
                     <form>
                         <button formaction="/users/{{ user.id }}/edit" formmethod="GET"
-                            class="btn btn-primary px-4 mr-1">Edit</button>
+                            class="btn btn-outline-dark w-25">Edit</button>
                         <button formaction="/users/{{ user.id }}/delete" formmethod="POST"
-                            class="btn btn-outline-danger px-3 ml-1">Delete</button>
+                            class="btn btn-outline-danger">Delete</button>
                     </form>
                 </div>
             </div>

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %} All Posts {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <h1 class="display-4 text-dark m-4 mb-5">All Posts</h1>
+</div>
+<div class="row">
+    {% for post in posts %}
+    <div class="col-sm-12 col-md-12 col-lg-6 mb-4">
+        <div class="card bg-dark shadow-lg">
+            <div class="card-body">
+                <h4 class="text-light">{{ post.title }}</h4>
+                <p class="lead font-italic text-secondary">by
+                    <a href="/users/{{ post.user.id }}">{{ post.user.full_name() }}</a> on {{ post.format_date() }}</p>
+                <h5 class="text-light">{{ post.body }}</h5>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -3,25 +3,29 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <h1 class="display-4 text-dark m-4">All Users</h1>
+    <h1 class="display-4 text-dark m-4 mb-5">All Users</h1>
 </div>
-<div class="row justify-content-center">
+<div class="row justify-content-start d-flex">
     {% for user in users %}
-    <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
-        <div class="card bg-dark shadow">
-            <div class="card-body justify-content-center">
-                <div class="justify-content-center">
-                    <img src="{{ user.image_url }}" alt="" class="img-fluid rounded-circle mx-auto d-block m-3 border"
-                        style="width: 100px !important; height:100px !important;" />
-                    <h5 class="text-center text-light mb-4"><a href="/users/{{ user.id }}">{{ user.full_name() }}</a>
-                    </h5>
-                </div>
-                <div class="col center-block text-center">
-                    <a href="/users/{{ user.id }}"><button type="button" class="btn btn-light">Details</button></a>
+    <a href="/users/{{ user.id }}">
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-3">
+            <div class="card bg-dark shadow-lg mb-3">
+                <div class="card-body justify-content-center">
+                    <div class="justify-content-center">
+                        <img src="{{ user.image_url }}" alt=""
+                            class="img-fluid rounded-circle mx-auto d-block m-3 border"
+                            style="width: 100px !important; height:100px !important; object-fit: cover;" />
+                        <h5 class="text-center text-light mb-4"><a
+                                href="/users/{{ user.id }}">{{ user.full_name() }}</a>
+                        </h5>
+                    </div>
+                    <div class="col center-block text-center">
+                        <a href="/users/{{ user.id }}" class="text-secondary">Details</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </a>
     {% endfor %}
 </div>
 {% endblock %}

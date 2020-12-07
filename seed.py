@@ -1,9 +1,15 @@
 from app import app
-from models import db, User, Post
+from models import db, User, Post, Tag, PostTag
 
 db.drop_all()
 db.create_all()
 
+User.query.delete()
+Post.query.delete()
+Tag.query.delete()
+PostTag.query.delete()
+
+#---------| Add Users |---------#
 first_names = ('Joe', 'Sellers', 'James', 'Poké',
                'Emma', 'Ruth Bader', 'Yang', 'Kurt')
 last_names = ('Orlowski', 'Crisp', 'Peachy', 'Mon',
@@ -25,6 +31,7 @@ users = [User(first_name=user[0], last_name=user[1], image_url=user[2])
 db.session.add_all(users)
 db.session.commit()
 
+#---------| Add Posts |---------#
 titles = ('I am Awesome', 'You are Awesome', 'This is Awesome',
           'We are Awesome', 'They are Awesome', 'She is Awesome',
           'He is Awesome', 'Thou art Awesome')
@@ -39,9 +46,25 @@ bodies = (
     'Donec eleifend eros ut urna viverra, ut consectetur odio semper.'
 )
 user_ids = (1, 1, 4, 2, 8, 8, 8)
-
-posts = [Post(title=post[0], body=post[1], user_id=post[2]) for post in
-         zip(titles, bodies, user_ids)]
+post = zip(titles, bodies, user_ids)
+posts = [Post(title=post[0], body=post[1], user_id=post[2]) for post in post]
 
 db.session.add_all(posts)
+db.session.commit()
+
+#---------| Add Tags |---------#
+tag_names = ('love', 'awesome', 'tech', 'python',
+             'flask', 'postgresql', 'sqlalchemy')
+tags = [Tag(name=name) for name in tag_names]
+
+db.session.add_all(tags)
+db.session.commit()
+
+post_tags_ids = ((1, 1), (2, 1), (2, 2), (3, 4), (4, 4), (4, 5), (5, 3),
+                 (5, 1), (6, 3), (7, 5), (7, 7), (1, 7), (1, 2), (1, 3),
+                 (1, 4), (1, 5), (1, 6))
+post_tags = [PostTag(post_id=post_tags_ids[0], tag_id=post_tags_ids[1])
+             for post_tags_ids in post_tags_ids]
+
+db.session.add_all(post_tags)
 db.session.commit()

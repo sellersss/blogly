@@ -7,6 +7,11 @@
         <h1 class="display-4">{{ post.title }}</h1>
         <p class="lead">by <a href="/users/{{ user.id }}"><strong>{{ user.full_name() }}</strong></a> on
             {{ post.format_date() }}</p>
+        {% for tag in tags %}
+        <a class="btn btn-sm btn-primary btn-outline-dark" href="/tags/{{ tag.id }}">
+            {{ tag.name }}
+        </a>
+        {% endfor %}
     </div>
 </div>
 <div class="row justify align-content-start">
@@ -20,7 +25,7 @@
             <div class="card-footer mt-4">
                 <form>
                     <button formaction="/posts/{{ post.id }}/edit" formmethod="GET"
-                        class="btn btn-primary px-4 mr-1">Edit</button>
+                        class="btn btn-primary px-4">Edit</button>
                     <button formaction="/posts/{{ post.id }}/delete" formmethod="POST"
                         class="btn btn-danger px-3 ml-1">Delete</button>
                 </form>

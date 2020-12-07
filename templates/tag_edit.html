@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} Editing {{ tag.name }} {% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<div class="row justify-content-center">
+    <h1 class="display-4 text-dark m-4 mb-5">Editing {{ tag.name.upper() }}</h1>
+</div>
+<div class="row align-content-center">
+    <div class="col-lg-4 col-md-8 mx-auto">
+        <form action="/tags/{{ tag.id }}/edit" method="POST" class="form-control">
+            <div class="form-group">
+                <label for="tag">Tag name</label>
+                <input type="input" name="tag" class="form-control mt-n2" style="user-select: all;"
+                    value="{{ tag.name }}">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mr-2">Save</button>
+                <a href="/tags/{{ tag.id }}" class="btn btn-outline-danger">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,57 +1,19 @@
-from flask import Flask, render_template, flash, redirect, url_for, session, logging, request
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from flask import Flask, render_template, redirect, request, flash
+from models import db, connect_db, User, Post
+from sqlalchemy import desc
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///blogly"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_ECHO"] = True
+app.config["SECRET_KEY"] = "crispppppyyyyyyyy"
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
-app.config['SECRET_KEY'] = 'secrettttzzz'
-
-db = SQLAlchemy(app)
-
-DEFAULT_PFP = 'https://twirpz.files.wordpress.com/2015/06/twitter-avi-gender-balanced-figure.png'
-
-
-#----------------------------#
-#-------| DATABASES |--------#
-#----------------------------#
-class User(db.Model):
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-
-    first_name = db.Column(db.String(50), nullable=False)
-
-    last_name = db.Column(db.String(50), nullable=False)
-
-    image_url = db.Column(db.String, nullable=False, default=DEFAULT_PFP)
-
-    def __repr__(self):
-        u = self
-        return f"<User {u.id} {u.first_name} {u.last_name} {u.image_url}>"
-
-    def full_name(self):
-        return self.first_name + ' ' + self.last_name
+connect_db(app)
+db.create_all()
 
 
-class Post(db.Model):
-    __tablename__ = 'posts'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(50), nullable=False)
-    body = db.Column(db.String(), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
-
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-    def __repr__(self):
-        p = self
-        return f"<Post {p.id} {p.title} {p.body} {p.created_at}>"
-
-    def format_date(self):
-        return self.created_at.strftime('%B %-d, %Y' + ' at ' + '%I:%M %p')
+# db.create_all()
 
 
 #----------------------------#
@@ -62,7 +24,7 @@ class Routes():
     def index():
         """Redirect to users list"""
 
-        return redirect('/users')
+        return redirect('/posts')
 
     @app.route('/users')
     def users_list():
@@ -183,13 +145,31 @@ class Routes():
         flash('Post updated successfully!')
         return render_template('post_edit.html', post=post)
 
-    @app.errorhandler(404)
-    def page_not_found(e):
-        """Handle page not found"""
+    @app.route('/posts/<int:post_id>/delete', methods=["POST"])
+    def post_delete(post_id):
+        """Deletes a specified post"""
 
-        return render_template('404.html'), 404
+        post = Post.query.get_or_404(post_id)
+
+        db.session.delete(post)
+        db.session.commit()
+
+        return redirect('/users')
+
+    @app.route('/posts')
+    def posts_list():
+        """Display all posts"""
+
+        posts = Post.query.order_by(desc(Post.created_at)).limit(5).all()
+
+        return render_template('posts.html', posts=posts)
+
+    # @app.errorhandler(404)
+    # def page_not_found(e):
+    #     """Handle page not found"""
+
+    #     return render_template('404.html'), 404
 
 
 if __name__ == "__main__":
-    db.create_all()
-    app.run(debug=True)
+    db.run()

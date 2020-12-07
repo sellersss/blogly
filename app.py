@@ -3,7 +3,7 @@ from models import db, connect_db, User, Post, Tag, PostTag
 from sqlalchemy import desc
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///blogly"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://sellerscrisp:Admin123@srv-captain--postgres-db/db?blogly"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
 app.config["SECRET_KEY"] = "crispppppyyyyyyyy"
